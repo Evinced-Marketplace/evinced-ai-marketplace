@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Per-project Claude Code settings (local tool permissions, etc.) — ignored,
+# EXCEPT the internal maintainer skills, which are tracked in the repo.
+.claude/*
+!.claude/skills/
+
+# CI tooling node_modules (deps are installed in CI via npm ci).
+tools/ci/node_modules/

@@ -1,0 +1,8 @@
+{
+    "mcpServers": {
+        "evinced-mobile-mcp": {
+            "command": "npx",
+            "args": ["-y", "@evinced/mcp-server-mobile@latest"]
+        }
+    }
+}

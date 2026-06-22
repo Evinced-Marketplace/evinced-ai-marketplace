@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "hooks": {
+        "sessionStart": [
+            {
+                "type": "command",
+                "bash": "\"$CLAUDE_PLUGIN_ROOT/scripts/refresh-marketplace.sh\"",
+                "cwd": ".",
+                "timeoutSec": 120
+            }
+        ]
+    }
+}

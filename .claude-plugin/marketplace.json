@@ -1,0 +1,25 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "evinced-ai-marketplace",
+  "description": "Evinced plugins and skills marketplace for AI coding agents.",
+  "owner": {
+    "name": "Evinced",
+    "url": "https://www.evinced.com"
+  },
+  "plugins": [
+    {
+      "name": "evinced-mobile-mcp",
+      "source": "./plugins/mobile-mcp",
+      "description": "Evinced Mobile MCP server. Provides automated accessibility analysis and remediation guidance for iOS and Android applications.",
+      "category": "accessibility",
+      "keywords": [
+        "evinced",
+        "accessibility",
+        "mobile",
+        "ios",
+        "android",
+        "mcp"
+      ]
+    }
+  ]
+}

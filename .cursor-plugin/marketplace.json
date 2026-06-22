@@ -1,0 +1,18 @@
+{
+    "name": "evinced-ai-marketplace",
+    "owner": {
+        "name": "Evinced",
+        "url": "https://www.evinced.com"
+    },
+    "metadata": {
+        "description": "Evinced plugins and skills marketplace for AI coding agents."
+    },
+    "pluginRoot": "plugins",
+    "plugins": [
+        {
+            "name": "evinced-mobile-mcp",
+            "source": "mobile-mcp",
+            "description": "Evinced Mobile MCP server. Provides automated accessibility analysis and remediation guidance for iOS and Android applications."
+        }
+    ]
+}
