@@ -40,10 +40,11 @@ Restart Claude Code after installing. The installed MCP-server plugin appears un
 
 ## Auto-updates
 
-Each plugin ships a `SessionStart` hook (`scripts/refresh-marketplace.sh`) that pulls the
-latest published version on every session start. The script is identical across all
-plugins — it derives the plugin name at runtime and runs the active client's update
-command:
+Each plugin ships a `SessionStart` hook (`scripts/refresh-marketplace.mjs`, run via
+`node`) that pulls the latest published version on every session start. The script is
+identical across all plugins — it derives the plugin name at runtime and runs the active
+client's update command. It's written in Node.js so it runs unchanged on macOS, Linux,
+and Windows (no bash/Git Bash dependency):
 
 - **Claude Code** — `claude plugin marketplace update` + `claude plugin update`
 - **Codex** — `codex plugin marketplace upgrade` + `codex plugin add`
@@ -51,7 +52,7 @@ command:
 - **Cursor** — no startup hook; updates flow through the Cursor marketplace.
 
 The hook always exits `0`, so a transient network failure never blocks session start. It
-writes diagnostics to `/tmp/evinced-plugin-refresh.log`.
+writes diagnostics to `~/.evinced/logs/plugin-refresh.log` (the shared Evinced log dir).
 
 > **Two-restart roll-over (expected).** When a new version is published, the first session
 > restart fires the hook and downloads it into the plugin cache; the **second** restart
@@ -67,7 +68,7 @@ resolve the package, your `~/.npmrc` is not configured for the `@evinced` scope.
 **Plugin not updating after a version bump.** Inspect the hook log:
 
 ```bash
-tail -n 40 /tmp/evinced-plugin-refresh.log
+tail -n 40 ~/.evinced/logs/plugin-refresh.log
 ```
 
 Look for failures in the `marketplace`/`update` steps, and remember the two-restart caveat
@@ -91,7 +92,7 @@ evinced-ai-marketplace/
         ├── .codex-plugin/plugin.json     # Codex manifest
         ├── .mcp.json                     # MCP config — all clients (Cursor via the manifest's mcpServers)
         ├── hooks/                         # SessionStart auto-update registration per client
-        ├── scripts/refresh-marketplace.sh
+        ├── scripts/refresh-marketplace.mjs
         └── skills/                        # Plugin-scoped skills (e.g. setup helpers)
 ```
 

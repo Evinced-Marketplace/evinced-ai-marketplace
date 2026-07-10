@@ -6,7 +6,9 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "${CLAUDE_PLUGIN_ROOT}/scripts/refresh-marketplace.sh"
+                        "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/refresh-marketplace.mjs\"",
+                        "bash": "node \"$CLAUDE_PLUGIN_ROOT/scripts/refresh-marketplace.mjs\"",
+                        "powershell": "node \"$env:CLAUDE_PLUGIN_ROOT/scripts/refresh-marketplace.mjs\""
                     }
                 ]
             }
