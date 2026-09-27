@@ -1,4 +1,4 @@
-# Evinced AI Plugins
+# Evinced AI Marketplace
 
 Evinced plugins and skills marketplace for AI coding agents.
 
@@ -16,12 +16,19 @@ reads the Claude manifest).
 ## Prerequisites
 
 - A supported client: **Claude Code**, **Cursor**, **Codex**, or **GitHub Copilot CLI**.
-- **npm access to the `@evinced` scope.** The MCP server is hosted on Evinced's private
-  JFrog registry, so your `~/.npmrc` must be configured to resolve `@evinced/*` packages
-  before `npx` can pull them. This is the same prerequisite as installing the Evinced MCP
-  servers directly.
+- **Node.js** on your `PATH` (used by the auto-update hook and by `npx`-launched MCP servers).
+- For plugins that ship an Evinced MCP server: **npm access to the `@evinced` scope.** The
+  servers are hosted on Evinced's private JFrog registry, so your `~/.npmrc` must be
+  configured to resolve `@evinced/*` packages before `npx` can pull them. This is the same
+  prerequisite as installing the Evinced MCP servers directly.
 
-## Install (Claude Code)
+## Install
+
+Every client follows the same two steps: add the `evinced-ai-marketplace` marketplace once,
+then install any plugin from it by name. The examples below install `evinced-mobile-mcp`;
+substitute the name of any plugin from the table above.
+
+### Claude Code
 
 Add the marketplace once:
 
@@ -29,14 +36,62 @@ Add the marketplace once:
 /plugin marketplace add GetEvinced/evinced-ai-marketplace
 ```
 
-Then install the plugin:
+Then install the plugin, e.g. Evinced Mobile MCP:
 
 ```
 /plugin install evinced-mobile-mcp@evinced-ai-marketplace
 ```
 
-Restart Claude Code after installing. The installed MCP-server plugin appears under
-`/mcp`; any bundled skills are picked up automatically by skill discovery.
+Restart Claude Code after installing. MCP servers appear under `/mcp`; bundled skills are
+picked up automatically. The same commands work from a terminal as
+`claude plugin marketplace add …` and `claude plugin install …`.
+
+### GitHub Copilot CLI
+
+Add the marketplace once:
+
+```bash
+copilot plugin marketplace add GetEvinced/evinced-ai-marketplace
+```
+
+Then install the plugin, e.g. Evinced Mobile MCP:
+
+```bash
+copilot plugin install evinced-mobile-mcp@evinced-ai-marketplace
+```
+
+Inside an interactive session, use `/plugin marketplace add …` and `/plugin install …`
+instead. Start a new session after installing.
+
+### Codex
+
+Add the marketplace once:
+
+```bash
+codex plugin marketplace add GetEvinced/evinced-ai-marketplace
+```
+
+Then install the plugin, e.g. Evinced Mobile MCP:
+
+```bash
+codex plugin add evinced-mobile-mcp@evinced-ai-marketplace
+```
+
+You can also browse and install interactively with `/plugins`. Start a new session after
+installing.
+
+### Cursor
+
+Cursor installs plugins from a marketplace through the **Customize** page:
+
+1. Open **Customize** in the sidebar.
+2. Find the plugin, e.g. Evinced Mobile MCP (`evinced-mobile-mcp`).
+3. Select **Install** and choose a project or user scope.
+
+If your organization uses a Cursor **team marketplace**, an admin can make these plugins
+available to the whole team: in the Cursor dashboard go to **Plugins & MCPs → Team
+Marketplaces → Add Marketplace → Import from Repo** and paste
+`https://github.com/GetEvinced/evinced-ai-marketplace`.
 
 ## Auto-updates
 
@@ -58,25 +113,6 @@ writes diagnostics to `~/.evinced/logs/plugin-refresh.log` (the shared Evinced l
 > restart fires the hook and downloads it into the plugin cache; the **second** restart
 > loads it. This is expected behavior of the client plugin runtimes, not a bug in this repo.
 
-## Troubleshooting
-
-**MCP server fails to start after install.** Most often this is a JFrog auth issue. Run
-`npx -y @evinced/mcp-server-mobile@latest --version` in a fresh terminal — if `npx` cannot
-resolve the package, your `~/.npmrc` is not configured for the `@evinced` scope. Fix
-`~/.npmrc` and restart the client.
-
-**Plugin not updating after a version bump.** Inspect the hook log:
-
-```bash
-tail -n 40 ~/.evinced/logs/plugin-refresh.log
-```
-
-Look for failures in the `marketplace`/`update` steps, and remember the two-restart caveat
-above — a single restart only stages the update.
-
-**Plugin appears in the marketplace but not in `/mcp` after install.** Make sure you fully
-restarted the client after installing, not just reloaded the session.
-
 ## Repository layout
 
 ```
@@ -84,7 +120,9 @@ evinced-ai-marketplace/
 ├── README.md
 ├── LICENSE
 ├── .claude-plugin/
-│   └── marketplace.json                  # Catalog — lists the plugins
+│   └── marketplace.json                  # Catalog — Claude Code, Codex, Copilot CLI
+├── .cursor-plugin/
+│   └── marketplace.json                  # Catalog — Cursor
 └── plugins/
     └── mobile-mcp/
         ├── .claude-plugin/plugin.json    # Claude manifest (also read by Copilot)
@@ -103,8 +141,11 @@ Design notes:
 - **No shared assets between plugins.** Each plugin is a fully self-contained subtree, so
   release cadences stay independent.
 - **No toolchain in the published tree.** The published repo is pure JSON + Markdown + one
-  shell script per plugin — no build step, no `node_modules`.
+  Node.js script per plugin — no build step, no `node_modules`.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+The contents of this repository (plugin manifests, skills, hooks, and scripts) are licensed
+under MIT — see [LICENSE](./LICENSE). The Evinced products these plugins install or connect
+to, such as the `@evinced/*` npm packages and Evinced services, are not covered by this
+license and remain subject to Evinced's own terms.
